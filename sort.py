@@ -1,28 +1,49 @@
-# /**
-#  File: sort.c
-#     check sort.h for details
-# */
 
-# #include <stdio.h>
-# #include <assert.h>
-# #include <limits.h>
+#SAMPLE LISTS FOR SORTING
 
-# static void swap(int *p1, int *p2) {
-#     int temp = *p1;
-#     *p1 = *p2;
-#     *p2 = temp;
-# }
+#numeric lists
+list0 = []
+list1 = [1]
+list2 = [-4, 1, 0, 19, 2.23, -12, 99, -99, 16.4, 5.25, 37]
+list3 = [-9, 1, -9, 14, 18, -12.6, 1509, 43.7, -12.6, 4]
+#other lists
+strlist = ["hello", "I'm gonna talk until you fall asleep", "hi", "", "this is a long greeting"]
+lencomp = lambda str1, str2 : len(str1) > len(str2)
 
-# void bubble_sort(int a[], const int len) {
-#     for(int upper = len - 1; upper >= 0; upper--) {
-#         for(int i = 0; i < upper; i++) {
-#             if (a[i] > a[i + 1]) {
-#                 swap(&a[i], &a[i + 1]);
-#             }
-#         }  
-#     }  
-# }
+class Student :
+    def __init__(self, name, grade, average) :
+        self.name = name
+        self.grade = grade
+        self.avg = average
+    def __repr__(self) :
+        res = "({}: In grade {} - Avg is {})".format(self.name, self.grade, self.avg)
+        return res
 
+student_list = [Student("Daniel", 12, 97), Student("Adam", 12, 100), Student("Evan", 10, 55)]
+def compare_students(s1, s2) :
+    if s1.grade > s2.grade:
+        return True
+    elif s1.grade < s2.grade:
+        return False
+    elif s1.name > s2.name:
+        return True
+    elif s1.name < s2.name:
+        return False
+    elif s1.avg > s2.avg:
+        return True
+    else :
+        return False
+#---------------
+
+def bubble_sort(arr, left_GreaterThan_right) :
+    for _ in range(len(arr) - 1) :
+        for i in range(len(arr) - 1) :
+            if left_GreaterThan_right(arr[i], arr[i + 1]) :
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+
+
+
+#selecting current minimums
 # void selection_sort(int a[], const int len) {  
 #     for (int lower = 0; lower < len - 1; lower++) {
 #         int min_pos = lower;
@@ -34,6 +55,10 @@
 #         swap(&a[min_pos], &a[lower]);
 #     }
 # }
+
+
+
+
 
 # //my implementation. Not bad but could be a lot more concise
 # void my_insertion_sort(int a[], const int len) {
@@ -161,3 +186,6 @@
     
 #     merge(a, middle - a, middle, (a + len) - middle);
 # }
+
+bubble_sort(student_list, compare_students)
+print(student_list)
