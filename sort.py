@@ -1,6 +1,5 @@
 
 #SAMPLE LISTS FOR SORTING
-
 #numeric lists
 list0 = []
 list1 = [1]
@@ -33,56 +32,44 @@ def compare_students(s1, s2) :
         return True
     else :
         return False
-#---------------
+#-------------------------------
 
-def bubble_sort(arr, left_GreaterThan_right) :
+
+#O(n)
+def bubble_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+    """
+    Bubble-right to get largest element, n-1 times. Afterwards, 
+    the last element (at index 0) is guaranteed to be the smallest
+    """
     for _ in range(len(arr) - 1) :
         for i in range(len(arr) - 1) :
             if left_GreaterThan_right(arr[i], arr[i + 1]) :
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
 
+#O(n)
+def selection_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
+    """
+    for each index but the last, find the smallest element in the
+    right subarray and swap it with its leftmost element, the current min
 
+    """
+    for i in range(len(arr)) :
+        for j in range(i + 1, len(arr)) :
+            if left_GreaterThan_right(arr[i], arr[j]):
+                arr[i], arr[j] = arr[j], arr[i]
 
-#selecting current minimums
-# void selection_sort(int a[], const int len) {  
-#     for (int lower = 0; lower < len - 1; lower++) {
-#         int min_pos = lower;
-#         for(int i = lower + 1; i < len; i++) {
-#             if (a[i] < a[min_pos]) {
-#                 min_pos = i;
-#             } 
-#         }
-#         swap(&a[min_pos], &a[lower]);
-#     }
-# }
+#O(n) but fast if mostly sorted
+def insertion_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
+    """
+    like selection sort, create a left sorted partition of smaller
+    elements but by only selecting the next element and bubbling left until no longer smaller
 
-
-
-
-
-# //my implementation. Not bad but could be a lot more concise
-# void my_insertion_sort(int a[], const int len) {
-#     int sorted = 0;//right-most index of sorted left-partition 
-#     for(int i = 1; i < len; i++){
-#         if (a[i] < a[sorted]) {
-#             swap(&a[i], &a[sorted]);//put breaking conditions in loop cond
-#             for(int p = sorted - 1; p >= 0 && a[p] > a[p + 1] ; p--) {
-#                 swap(&a[p], &a[p + 1]);
-#             }
-#         }
-#         sorted++;
-#     }  
-# }
-
-# //CS136's implementation. They don't have a 'sorted' index tracker.
-# //It just starts at 1 and continuously checks at indexes below from the start
-# void insertion_sort(int a[], int len) { 
-#     for (int i = 1; i < len; ++i) {
-#         for (int j = i; j > 0 && a[j - 1] > a[j]; --j) { 
-#             swap(&a[j], &a[j - 1]);
-#         } 
-#     }
-# }
+    """
+    for i_after_sorted in range(1, len(arr)) :
+        j = i_after_sorted
+        while j > 0 and arr[j - 1] > arr[j] :
+            arr[j - 1], arr[j] = arr[j], arr[j - 1] 
+            j-= 1
 
 
 # static int *select_pivot(int *s, int *m, int *e) {
@@ -124,6 +111,10 @@ def bubble_sort(arr, left_GreaterThan_right) :
 #     quicksort(arr, boarder - arr);
 #     quicksort(boarder + 1, (arr + len) - (boarder + 1));
 # }
+
+insertion_sort(list3)
+print(list3)    
+
 
 # //O(n) helper funciton for mergesort
 # //requires: arrays a and b are adjacent in memory and they are sorted
@@ -186,6 +177,3 @@ def bubble_sort(arr, left_GreaterThan_right) :
     
 #     merge(a, middle - a, middle, (a + len) - middle);
 # }
-
-bubble_sort(student_list, compare_students)
-print(student_list)
