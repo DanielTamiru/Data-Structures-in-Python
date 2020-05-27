@@ -67,113 +67,65 @@ def insertion_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
     """
     for i_after_sorted in range(1, len(arr)) :
         j = i_after_sorted
-        while j > 0 and arr[j - 1] > arr[j] :
+        while j > 0 and left_GreaterThan_right(arr[j - 1], arr[j]) :
             arr[j - 1], arr[j] = arr[j], arr[j - 1] 
             j-= 1
 
+def quick_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+    """
+    quick_sort is a wrapper to sort
+    recursively select a pivot a move all larger elements to the right of 
+    it and smaller to the left. Recurse on left and right subarrays
+    """
+    def sort(low, high) :
+        if low < high :
+            pivot, divider = arr[high], low
+            #partition
+            for i in range(low, high) :
+                if left_GreaterThan_right(pivot , arr[i]):
+                    arr[i], arr[divider] = arr[divider], arr[i]
+                    divider += 1
+            arr[high], arr[divider] = arr[divider], arr[high]
+            #sort subarrays
+            sort(low, divider - 1)
+            sort(divider + 1, high)
 
-# static int *select_pivot(int *s, int *m, int *e) {
-#     if((*s <= *m && *s >= *e) || (*s >= *m && *s <= *e)) {
-#         return s;
-#     }
-#     else if ((*m <= *s && *m >= *e) || (*m >= *s && *m <= *e)){
-#         return m;
-#     }
-#     else {
-#         return e;
-#     }      
-# }
-# //you learned a valuable lesson with quicksort. Never think published info is
-# //not the most efficient and concise without mathematically checking your method
-# void quicksort(int *arr, int len) {
-#     assert(arr);  
-#     if (len == 0){
-#         return; 
-#     }
-#     int *pivot = select_pivot(arr, arr + len/2, arr + len - 1);
-#     int *boarder = arr + len - 1;
-
-#     for (int *i = arr + len - 1; i >= arr; i--) {
-#         if (*i > *pivot) {
-#             swap(i, boarder);
-#             //if you happen to move the pivot around, make sure to track it
-#             if(pivot == i) {
-#                 pivot = boarder;
-#             }
-#             if(pivot == boarder) {
-#                 pivot = i;
-#             }
-#             boarder--;
-#         }
-#     }
-
-#     swap(pivot, boarder);
-#     quicksort(arr, boarder - arr);
-#     quicksort(boarder + 1, (arr + len) - (boarder + 1));
-# }
-
-insertion_sort(list3)
-print(list3)    
+    sort(0, len(arr) - 1)
 
 
-# //O(n) helper funciton for mergesort
-# //requires: arrays a and b are adjacent in memory and they are sorted
-# static void merge(int a[], int a_len, int b[], int b_len) {
-#     //assert(a + a_len == b);
-#     int a_i = 0; // initial a->data index
-#     int b_i = 0; // initial b->data index
+def merge_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+    """
+    recursively split array into two subarrays, sort them
+    and combine parts
+    """
+    if len(arr) <= 1 :  
+        return
 
-#     int merged[1000];
-#     int merged_len = 0;
+    middle = len(arr) // 2
+    left = arr[:middle]
+    right = arr[middle:]
 
-#     while(a_i < a_len && b_i < b_len) {
-#         //WLOG, set set a as pace setter
-#         if (a[a_i] >= b[b_i]){
-#             merged[merged_len] = b[b_i];
-#             merged_len++;
-#             if (a[a_i] == b[b_i]) {
-#                 a_i++;
-#                 merged[merged_len] = b[b_i];
-#                 merged_len++;
-#             }
-#             b_i++;
-#         }
-#         else {
-#             merged[merged_len] = a[a_i];
-#             merged_len++;
-#             a_i++;
-#         } 
-#     }  
-#     //now append rest of longer set 
-#     while (a_i < a_len) {
-#         merged[merged_len] = a[a_i];
-#         merged_len++;
-#         a_i++;
-#     }
-#     while (b_i < b_len) {
-#         merged[merged_len] = b[b_i];
-#         merged_len++;
-#         b_i++;
-#     }     
-#     //finally, overwrite a and b with the temporary array
-#     for(int i = 0; i < a_len + b_len; i++) {
-#         if (i < a_len) {
-#             a[i] = merged[i];
-#         }
-#         else {
-#             b[i - a_len] = merged[i];
-#         }
-#     }
-# }
-# //n log n   
-# void mergesort(int a[], const int len) {
-#     if (len == 1) {
-#         return;
-#     }
-#     int *middle = a + len/2;
+    merge_sort(left, left_GreaterThan_right)
+    merge_sort(right, left_GreaterThan_right)
+
+    #Now, merge
+    i = l = r = 0
+
+    while l < len(left) or r < len(right) :
+        if  l >= len(left) :
+            arr[i] = right[r]
+            r += 1
+        elif r >= len(right) :
+            arr[i] = left[l]
+            l += 1
+        elif left_GreaterThan_right(right[r], left[l]) :
+            arr[i] = left[l]
+            l += 1
+        else :
+            arr[i] = right[r]
+            r += 1
+        i += 1
+            
+
+
     
-#     mergesort(a, middle - a);
-#     mergesort(middle, (a + len) - middle);
-    
-#     merge(a, middle - a, middle, (a + len) - middle);
-# }
