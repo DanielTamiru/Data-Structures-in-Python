@@ -34,20 +34,19 @@ def compare_students(s1, s2) :
         return False
 #-------------------------------
 
-
-#O(n)
-def bubble_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+#time: O(n^2)
+def bubble_sort(arr, comp=lambda a, b: a > b) :
     """
     Bubble-right to get largest element, n-1 times. Afterwards, 
     the last element (at index 0) is guaranteed to be the smallest
     """
     for _ in range(len(arr) - 1) :
         for i in range(len(arr) - 1) :
-            if left_GreaterThan_right(arr[i], arr[i + 1]) :
+            if comp(arr[i], arr[i + 1]) :
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
 
-#O(n)
-def selection_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
+#time: O(n^2)
+def selection_sort(arr,comp=lambda a, b: a > b) :
     """
     for each index but the last, find the smallest element in the
     right subarray and swap it with its leftmost element, the current min
@@ -55,11 +54,11 @@ def selection_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
     """
     for i in range(len(arr)) :
         for j in range(i + 1, len(arr)) :
-            if left_GreaterThan_right(arr[i], arr[j]):
+            if comp(arr[i], arr[j]):
                 arr[i], arr[j] = arr[j], arr[i]
 
-#O(n) but fast if mostly sorted
-def insertion_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
+#time: O(n^2) but fast if mostly sorted
+def insertion_sort(arr,comp=lambda a, b: a > b) :
     """
     like selection sort, create a left sorted partition of smaller
     elements but by only selecting the next element and bubbling left until no longer smaller
@@ -67,11 +66,12 @@ def insertion_sort(arr,left_GreaterThan_right=lambda a, b: a > b) :
     """
     for i_after_sorted in range(1, len(arr)) :
         j = i_after_sorted
-        while j > 0 and left_GreaterThan_right(arr[j - 1], arr[j]) :
+        while j > 0 and comp(arr[j - 1], arr[j]) :
             arr[j - 1], arr[j] = arr[j], arr[j - 1] 
             j-= 1
 
-def quick_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+#time: O(n^2) but average case is O(nlog n)
+def quick_sort(arr, comp=lambda a, b: a > b) :
     """
     quick_sort is a wrapper to sort
     recursively select a pivot a move all larger elements to the right of 
@@ -82,7 +82,7 @@ def quick_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
             pivot, divider = arr[high], low
             #partition
             for i in range(low, high) :
-                if left_GreaterThan_right(pivot , arr[i]):
+                if comp(pivot , arr[i]):
                     arr[i], arr[divider] = arr[divider], arr[i]
                     divider += 1
             arr[high], arr[divider] = arr[divider], arr[high]
@@ -92,8 +92,8 @@ def quick_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
 
     sort(0, len(arr) - 1)
 
-
-def merge_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
+#time: O(nlog n)
+def merge_sort(arr, comp=lambda a, b: a > b) :
     """
     recursively split array into two subarrays, sort them
     and combine parts
@@ -105,8 +105,8 @@ def merge_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
     left = arr[:middle]
     right = arr[middle:]
 
-    merge_sort(left, left_GreaterThan_right)
-    merge_sort(right, left_GreaterThan_right)
+    merge_sort(left, comp)
+    merge_sort(right, comp)
 
     #Now, merge
     i = l = r = 0
@@ -118,14 +118,33 @@ def merge_sort(arr, left_GreaterThan_right=lambda a, b: a > b) :
         elif r >= len(right) :
             arr[i] = left[l]
             l += 1
-        elif left_GreaterThan_right(right[r], left[l]) :
+        elif comp(right[r], left[l]) :
             arr[i] = left[l]
             l += 1
         else :
             arr[i] = right[r]
             r += 1
         i += 1
-            
+
+################### SCRIPT #####################
+
+if __name__ == "__main__":
+    print("Input values (type stop to stop): ")
+    val = input()
+    arr = []
+    while val.lower() != "stop" :
+        try :
+             arr.append(int(val))
+        except ValueError:
+            try :
+                arr.append(float(val))
+            except ValueError :
+                arr.append(val)
+        val = input()
+
+    merge_sort(arr)
+    print("\nSorted:")
+    print(arr)
 
 
-    
+
