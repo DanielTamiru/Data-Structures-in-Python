@@ -1,3 +1,5 @@
+from queue import Queue
+
 ###- Iterative Depth First Traversal -###
 
 def dfs_iterative(root) :
